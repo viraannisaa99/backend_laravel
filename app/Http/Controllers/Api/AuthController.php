@@ -42,14 +42,25 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        if (!$token = auth()->guard('api')->attempt($credentials)) {
+        try {
+            if (!$token = auth()->guard('api')->attempt($credentials)) {
+                return response()->json([
+                    'success' => false,
+                    'status' => 401,
+                    'message' => 'Invalid Credentials!',
+                    'error' => 'Unauthorized'
+                ], 401);
+            }
+        } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'status' => 401,
-                'message' => 'Invalid Credentials!',
-                'error' => 'Unauthorized'
-            ], 401);
+                'status' => 500,
+                'message' => 'Please contact administrator!',
+                'error' => 'Internal Server Error'
+            ], 500);
         }
+
+
         return $this->createNewToken($token);
     }
     /**
