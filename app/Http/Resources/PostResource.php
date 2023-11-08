@@ -10,6 +10,7 @@ class PostResource extends JsonResource
     public $status;
     public $message;
     public $status_code;
+    public $token;
 
     /**
      * __construct
@@ -22,9 +23,10 @@ class PostResource extends JsonResource
     public function __construct($status, $message, $status_code, $resource)
     {
         parent::__construct($resource);
-        $this->status  = $status;
-        $this->message  = $message;
+        $this->status      = $status;
+        $this->message     = $message;
         $this->status_code = $status_code;
+        $this->token       = request()->bearerToken();
     }
 
     /**
@@ -39,6 +41,7 @@ class PostResource extends JsonResource
             'success'   => $this->status,
             'message'   => $this->message,
             'status'    => $this->status_code,
+            'token'     => $this->token,
             'data'      => $this->resource
         ];
     }

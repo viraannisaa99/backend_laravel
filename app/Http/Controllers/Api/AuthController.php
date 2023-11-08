@@ -119,7 +119,11 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->createNewToken(auth()->refresh());
+        try {
+            return $this->createNewToken(auth()->refresh());
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $exception) {
+            throw new AuthenticationException($exception->getMessage());
+        }
     }
     /**
      * Get the authenticated User.
